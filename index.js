@@ -1,7 +1,7 @@
 var http = require('http').createServer(handler);
 var fs = require('fs')
 
-http.listen(3000);
+http.listen(process.env.PORT || 3000);
 function handler(req, res) {
     fs.readFile(__dirname + '/index.html', function(err, data) {
         if (err) {
