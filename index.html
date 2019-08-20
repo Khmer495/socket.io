@@ -3,9 +3,44 @@
     <head>
         <meta charset="utf-8">
         <title>Socket.ioのテスト</title>
-        <script src="/socket.io/socket.io.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     </head>
     <body>
+        <div class="container">
+            <form id="myform">
+                <select name="rooms">
+                    <option value="room_1">Room 1</option>
+                    <option value="room_2">Room 2</option>
+                </select>
+                <input name="name" type="text">
+                <input name="msg" type="text">
+                <button name="btn">送信</button>
+            </form>
+            <hr>
+            <ul id="message"></ul>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            var socket = io();
+            var message = document.getElementById('message');
+            var form = document.forms.myform;
+
+            form.btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                socket.json.emit('emit_from_client', {
+                    room: form.rooms.value,
+                    name: form.name.value,
+                    msg: form.msg.value
+                });
+                form.msg.value = '';
+            })
+
+            socket.on('emit_from_server', function(data) {
+                var li = document.createElement('li');
+                li.textContent = data;
+                message.appendChild(li);
+            });
+        </script>
     </body>
 </html>
